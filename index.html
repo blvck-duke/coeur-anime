@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Coeur Animé</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        background: #000;
+        overflow: hidden;
+      }
+      canvas {
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- SVG caché du coeur pour extraire le path -->
+    <svg
+      id="heartSVG"
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 600 552"
+      style="display: none"
+    >
+      <path
+        id="heartPath"
+        d="M300,488 C300,488 50,340 50,180
+    C50,100 110,40 190,40
+    C240,40 280,65 300,100
+    C320,65 360,40 410,40
+    C490,40 550,100 550,180
+    C550,340 300,488 300,488 Z"
+      />
+    </svg>
+
+    <!-- Three.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <!-- GSAP -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+
+    <script>
+      // ─── SETUP THREE.JS ───────────────────────────────────────────
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(
+        60,
+        innerWidth / innerHeight,
+        0.1,
+        5000,
+      );
+      camera.position.set(0, 0, 600);
+
+      const renderer = new THREE.WebGLRenderer({ antialias: true });
+      renderer.setSize(innerWidth, innerHeight);
+      renderer.setPixelRatio(devicePixelRatio);
+      document.body.appendChild(renderer.domElement);
+
+      // ─── EXTRAIRE LES POINTS DU COEUR ─────────────────────────────
+      const path = document.getElementById("heartPath");
+      const length = path.getTotalLength();
+      const positions = [];
+      const colors = [];
+      const vectors = [];
+
+      // Palette de couleurs : rouge → rose → violet
+      const palette = [
+        new THREE.Color(1.0, 0.0, 0.3),
+        new THREE.Color(1.0, 0.1, 0.5),
+        new THREE.Color(0.9, 0.0, 0.6),
+        new THREE.Color(1.0, 0.3, 0.7),
+        new THREE.Color(0.6, 0.0, 1.0),
+      ];
+
+      const STEP = 0.4; // densité des particules
+
+      for (let i = 0; i < length; i += STEP) {
+        const point = path.getPointAtLength(i);
+
+        // Centrer le coeur
+        const x = point.x - 300;
+        const y = -(point.y - 276);
+        const z = 0;
+
+        // Position finale (forme du coeur)
+        vectors.push({ x, y, z });
+
+        // Position de départ aléatoire (explosion)
+        positions.push(
+          (Math.random() - 0.5) * 1200,
+          (Math.random() - 0.5) * 1200,
+          (Math.random() - 0.5) * 800,
+        );
+
+        // Couleur aléatoire de la palette
+        const c = palette[Math.floor(Math.random() * palette.length)];
+        colors.push(c.r, c.g, c.b);
+      }
+
+      // ─── CRÉER LES PARTICULES ─────────────────────────────────────
+      const geometry = new THREE.BufferGeometry();
+      const posArray = new Float32Array(positions);
+      const colArray = new Float32Array(colors);
+
+      geometry.setAttribute("position", new THREE.BufferAttribute(posArray, 3));
+      geometry.setAttribute("color", new THREE.BufferAttribute(colArray, 3));
+
+      const material = new THREE.PointsMaterial({
+        size: 3.5,
+        vertexColors: true,
+        transparent: true,
+        opacity: 0.95,
+        sizeAttenuation: true,
+      });
+
+      const particles = new THREE.Points(geometry, material);
+      scene.add(particles);
+
+      // ─── LUMIÈRE AMBIANTE (effet glow) ────────────────────────────
+      const light = new THREE.PointLight(0xff0055, 2, 800);
+      light.position.set(0, 0, 200);
+      scene.add(light);
+
+      // ─── ANIMATION GSAP ───────────────────────────────────────────
+      const posAttr = geometry.attributes.position;
+      const tl = gsap.timeline({ repeat: -1, yoyo: true, repeatDelay: 0.5 });
+
+      vectors.forEach((target, i) => {
+        tl.to(
+          posAttr.array,
+          {
+            [i * 3]: target.x,
+            [i * 3 + 1]: target.y,
+            [i * 3 + 2]: target.z + (Math.random() - 0.5) * 40,
+            ease: "power2.inOut",
+            duration: gsap.utils.random(1.5, 3.5),
+            delay: i * 0.0005,
+            onUpdate: () => {
+              posAttr.needsUpdate = true;
+            },
+          },
+          0,
+        );
+      });
+
+      // ─── PULSATION DU COEUR ───────────────────────────────────────
+      gsap.to(particles.scale, {
+        x: 1.08,
+        y: 1.08,
+        z: 1.08,
+        repeat: -1,
+        yoyo: true,
+        duration: 0.6,
+        ease: "power1.inOut",
+      });
+
+      // ─── ROTATION LENTE ───────────────────────────────────────────
+      gsap.to(particles.rotation, {
+        y: Math.PI * 2,
+        repeat: -1,
+        duration: 12,
+        ease: "none",
+      });
+
+      // ─── RESIZE ───────────────────────────────────────────────────
+      window.addEventListener("resize", () => {
+        camera.aspect = innerWidth / innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(innerWidth, innerHeight);
+      });
+
+      // ─── BOUCLE DE RENDU ──────────────────────────────────────────
+      (function animate() {
+        requestAnimationFrame(animate);
+        posAttr.needsUpdate = true;
+        renderer.render(scene, camera);
+      })();
+    </script>
+  </body>
+</html>
