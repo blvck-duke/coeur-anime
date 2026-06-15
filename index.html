@@ -2,10 +2,13 @@
 <html lang="fr">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Pour Safi 💙</title>
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0"
+    />
+    <title>Safi 💙</title>
     <link
-      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Great+Vibes&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap"
       rel="stylesheet"
     />
     <style>
@@ -15,152 +18,58 @@
         box-sizing: border-box;
       }
 
+      html,
       body {
+        width: 100%;
+        height: 100%;
         background: #000;
         overflow: hidden;
-        width: 100vw;
-        height: 100vh;
-        display: flex;
-        align-items: center;
-        justify-content: center;
       }
 
       canvas {
         position: fixed;
         top: 0;
         left: 0;
-        width: 100vw !important;
-        height: 100vh !important;
+        width: 100% !important;
+        height: 100% !important;
       }
 
-      /* ── OVERLAY TEXTE ── */
-      .overlay {
+      /* Nom Safi — parfaitement centré */
+      .name-wrap {
         position: fixed;
         inset: 0;
         z-index: 10;
         display: flex;
-        flex-direction: column;
         align-items: center;
         justify-content: center;
         pointer-events: none;
-        gap: clamp(8px, 3vw, 20px);
       }
 
-      /* ── NOM SAFI ── */
       .name {
         font-family: "Great Vibes", cursive;
-        font-size: clamp(5rem, 22vw, 12rem);
-        color: #fff;
-        opacity: 0;
-        transform: scale(0.5);
-        animation: nameAppear 2s cubic-bezier(0.16, 1, 0.3, 1) 1s forwards;
-        text-shadow:
-          0 0 20px rgba(255, 80, 150, 0.8),
-          0 0 60px rgba(255, 80, 150, 0.4),
-          0 0 100px rgba(200, 0, 100, 0.3);
-        letter-spacing: 4px;
-        line-height: 1;
-      }
-
-      /* Shimmer sur le nom */
-      .name span {
+        font-size: clamp(4rem, 20vw, 10rem);
         background: linear-gradient(
           135deg,
           #fff 0%,
-          #ffb3d1 30%,
-          #fff 50%,
-          #ff6eb4 70%,
+          #ffb3d1 35%,
+          #fff 55%,
+          #ff6eb4 80%,
           #fff 100%
         );
         background-size: 200% auto;
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         background-clip: text;
+        text-shadow: none;
+        opacity: 0;
+        transform: scale(0.5);
         animation:
           nameAppear 2s cubic-bezier(0.16, 1, 0.3, 1) 1s forwards,
           shimmer 4s linear 3s infinite;
+        filter: drop-shadow(0 0 20px rgba(255, 80, 150, 0.8))
+          drop-shadow(0 0 50px rgba(255, 80, 150, 0.4));
       }
 
-      @keyframes shimmer {
-        to {
-          background-position: 200% center;
-        }
-      }
-
-      /* ── LIGNE DÉCO ── */
-      .deco-line {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        opacity: 0;
-        animation: fadeUp 1.2s ease 2.2s forwards;
-      }
-
-      .deco-line::before,
-      .deco-line::after {
-        content: "";
-        width: clamp(40px, 12vw, 100px);
-        height: 1px;
-        background: linear-gradient(
-          90deg,
-          transparent,
-          rgba(255, 150, 180, 0.6)
-        );
-      }
-      .deco-line::after {
-        background: linear-gradient(
-          90deg,
-          rgba(255, 150, 180, 0.6),
-          transparent
-        );
-      }
-
-      .deco-heart {
-        font-size: clamp(0.8rem, 2vw, 1rem);
-        color: rgba(255, 150, 180, 0.8);
-        animation: heartBeat 1.2s ease-in-out 2.2s infinite;
-      }
-
-      @keyframes heartBeat {
-        0%,
-        100% {
-          transform: scale(1);
-        }
-        50% {
-          transform: scale(1.3);
-        }
-      }
-
-      /* ── MESSAGE ── */
-      .message {
-        font-family: "Cormorant Garamond", serif;
-        font-style: italic;
-        font-weight: 300;
-        font-size: clamp(0.85rem, 3vw, 1.3rem);
-        color: rgba(255, 200, 220, 0.85);
-        letter-spacing: clamp(2px, 1vw, 5px);
-        text-align: center;
-        opacity: 0;
-        padding: 0 20px;
-        animation: fadeUp 1.2s ease 2.8s forwards;
-        text-shadow: 0 0 20px rgba(255, 100, 150, 0.4);
-        line-height: 1.6;
-      }
-
-      /* ── PETIT TEXTE BAS ── */
-      .sub-message {
-        font-family: "Cormorant Garamond", serif;
-        font-size: clamp(0.65rem, 2vw, 0.9rem);
-        color: rgba(255, 150, 180, 0.45);
-        letter-spacing: clamp(3px, 1.5vw, 8px);
-        text-align: center;
-        opacity: 0;
-        padding: 0 20px;
-        text-transform: uppercase;
-        animation: fadeUp 1.2s ease 3.4s forwards;
-      }
-
-      /* ── KEYFRAMES ── */
       @keyframes nameAppear {
         from {
           opacity: 0;
@@ -172,18 +81,13 @@
         }
       }
 
-      @keyframes fadeUp {
-        from {
-          opacity: 0;
-          transform: translateY(15px);
-        }
+      @keyframes shimmer {
         to {
-          opacity: 1;
-          transform: translateY(0);
+          background-position: 200% center;
         }
       }
 
-      /* ── PARTICULES FLOTTANTES CSS ── */
+      /* Petits coeurs flottants */
       .floaties {
         position: fixed;
         inset: 0;
@@ -195,7 +99,6 @@
       .floaty {
         position: absolute;
         bottom: -20px;
-        font-size: clamp(10px, 2vw, 18px);
         opacity: 0;
         animation: floatUp linear infinite;
       }
@@ -206,20 +109,20 @@
           opacity: 0;
         }
         10% {
-          opacity: 0.6;
+          opacity: 0.7;
         }
         90% {
           opacity: 0.2;
         }
         100% {
-          transform: translateY(-100vh) rotate(360deg);
+          transform: translateY(-110vh) rotate(360deg);
           opacity: 0;
         }
       }
     </style>
   </head>
   <body>
-    <!-- SVG caché pour le coeur -->
+    <!-- SVG caché coeur -->
     <svg
       id="heartSVG"
       xmlns="http://www.w3.org/2000/svg"
@@ -237,23 +140,19 @@
       />
     </svg>
 
-    <!-- Petits coeurs flottants -->
+    <!-- Coeurs flottants -->
     <div class="floaties" id="floaties"></div>
 
-    <!-- Texte overlay -->
-    <div class="overlay">
-      <div class="name"><span>Safi</span></div>
-      <div class="deco-line"><span class="deco-heart">♥</span></div>
-      <div class="message"></div>
-      <div class="sub-message"></div>
+    <!-- Nom centré -->
+    <div class="name-wrap">
+      <div class="name">Safi</div>
     </div>
 
-    <!-- Three.js + GSAP -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
 
     <script>
-      // ── SETUP THREE.JS ─────────────────────────────────────────────
+      // ── THREE.JS SETUP ─────────────────────────────────────────────
       const scene = new THREE.Scene();
       const camera = new THREE.PerspectiveCamera(
         60,
@@ -261,21 +160,18 @@
         0.1,
         5000,
       );
+      const isMobile = innerWidth < 768;
 
-      // Zoom adapté au mobile
-      const isMobile = innerWidth < 600;
-      camera.position.set(0, 0, isMobile ? 800 : 600);
+      // Zoom adapté à la taille d'écran
+      camera.position.set(0, 0, isMobile ? 750 : 600);
 
-      const renderer = new THREE.WebGLRenderer({
-        antialias: true,
-        alpha: true,
-      });
+      const renderer = new THREE.WebGLRenderer({ antialias: true });
       renderer.setSize(innerWidth, innerHeight);
       renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
       renderer.setClearColor(0x000000, 1);
       document.body.appendChild(renderer.domElement);
 
-      // ── EXTRAIRE POINTS DU COEUR ───────────────────────────────────
+      // ── POINTS DU COEUR ────────────────────────────────────────────
       const path = document.getElementById("heartPath");
       const length = path.getTotalLength();
 
@@ -292,40 +188,37 @@
         new THREE.Color(1.0, 0.5, 0.8),
       ];
 
-      // Densité réduite sur mobile pour les perfs
-      const STEP = isMobile ? 0.6 : 0.35;
-
-      // Échelle réduite sur mobile
-      const SCALE = isMobile ? 0.7 : 1;
+      const STEP = isMobile ? 0.55 : 0.35;
+      const SCALE = isMobile ? 0.65 : 1.0;
 
       for (let i = 0; i < length; i += STEP) {
         const point = path.getPointAtLength(i);
         const x = (point.x - 300) * SCALE;
         const y = -(point.y - 276) * SCALE;
-        const z = 0;
 
-        vectors.push({ x, y, z });
-
+        vectors.push({ x, y, z: 0 });
         positions.push(
-          (Math.random() - 0.5) * (isMobile ? 600 : 1200),
-          (Math.random() - 0.5) * (isMobile ? 600 : 1200),
-          (Math.random() - 0.5) * (isMobile ? 400 : 800),
+          (Math.random() - 0.5) * (isMobile ? 500 : 1200),
+          (Math.random() - 0.5) * (isMobile ? 500 : 1200),
+          (Math.random() - 0.5) * (isMobile ? 300 : 800),
         );
 
         const c = palette[Math.floor(Math.random() * palette.length)];
         colors.push(c.r, c.g, c.b);
       }
 
-      // ── PARTICULES ─────────────────────────────────────────────────
       const geometry = new THREE.BufferGeometry();
-      const posArray = new Float32Array(positions);
-      const colArray = new Float32Array(colors);
-
-      geometry.setAttribute("position", new THREE.BufferAttribute(posArray, 3));
-      geometry.setAttribute("color", new THREE.BufferAttribute(colArray, 3));
+      geometry.setAttribute(
+        "position",
+        new THREE.BufferAttribute(new Float32Array(positions), 3),
+      );
+      geometry.setAttribute(
+        "color",
+        new THREE.BufferAttribute(new Float32Array(colors), 3),
+      );
 
       const material = new THREE.PointsMaterial({
-        size: isMobile ? 2.5 : 3.5,
+        size: isMobile ? 2.8 : 3.5,
         vertexColors: true,
         transparent: true,
         opacity: 0.95,
@@ -335,12 +228,7 @@
       const points = new THREE.Points(geometry, material);
       scene.add(points);
 
-      // ── LUMIÈRE ────────────────────────────────────────────────────
-      const light = new THREE.PointLight(0xff0055, 2, 800);
-      light.position.set(0, 0, 200);
-      scene.add(light);
-
-      // ── ANIMATION GSAP ─────────────────────────────────────────────
+      // ── GSAP ANIMATIONS ────────────────────────────────────────────
       const posAttr = geometry.attributes.position;
       const tl = gsap.timeline({ repeat: -1, yoyo: true, repeatDelay: 0.8 });
 
@@ -362,7 +250,7 @@
         );
       });
 
-      // ── PULSATION ──────────────────────────────────────────────────
+      // Pulsation
       gsap.to(points.scale, {
         x: 1.08,
         y: 1.08,
@@ -373,7 +261,7 @@
         ease: "power1.inOut",
       });
 
-      // ── ROTATION ───────────────────────────────────────────────────
+      // Rotation lente
       gsap.to(points.rotation, {
         y: Math.PI * 2,
         repeat: -1,
@@ -395,28 +283,26 @@
         renderer.render(scene, camera);
       })();
 
-      // ── PETITS COEURS FLOTTANTS CSS ────────────────────────────────
+      // ── COEURS FLOTTANTS ───────────────────────────────────────────
       const floaties = document.getElementById("floaties");
-      const EMOJIS = ["♥", "❤", "💕", "✨", "💫", "♡"];
+      const EMOJIS = ["♥", "❤", "💕", "✨", "💫", "♡", "🌸"];
 
       function createFloaty() {
         const el = document.createElement("span");
         el.classList.add("floaty");
         el.textContent = EMOJIS[Math.floor(Math.random() * EMOJIS.length)];
         el.style.left = Math.random() * 100 + "vw";
-        el.style.fontSize = Math.random() * 16 + 8 + "px";
-        el.style.color = `hsl(${Math.random() * 40 + 320}, 100%, ${Math.random() * 20 + 70}%)`;
+        el.style.fontSize = Math.random() * 14 + 8 + "px";
+        el.style.color = `hsl(${Math.random() * 40 + 320}, 100%, ${Math.random() * 20 + 65}%)`;
         const dur = Math.random() * 8 + 6;
         el.style.animationDuration = dur + "s";
-        el.style.animationDelay = Math.random() * 5 + "s";
-        el.style.opacity = 0;
+        el.style.animationDelay = Math.random() * 3 + "s";
         floaties.appendChild(el);
-        setTimeout(() => el.remove(), (dur + 5) * 1000);
+        setTimeout(() => el.remove(), (dur + 4) * 1000);
       }
 
-      // Créer des coeurs en continu
-      setInterval(createFloaty, 600);
-      for (let i = 0; i < 8; i++) createFloaty();
+      setInterval(createFloaty, 700);
+      for (let i = 0; i < 10; i++) createFloaty();
     </script>
   </body>
 </html>
